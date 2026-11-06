@@ -391,3 +391,35 @@ footer {
         scroll-behavior: auto !important;
     }
 }
+/* MAIMUNA'S MUSIC CONTROL */
+
+.music-button {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 14px 28px;
+    border-radius: 40px;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        #a855f7,
+        #642b91
+    );
+
+    border: 1px solid #e9c5ff;
+
+    font-size: 12px;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+
+    box-shadow: 0 0 25px #a855f766;
+
+    transition: all .3s ease;
+}
+
+.music-button:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 35px #d19aff;
+}

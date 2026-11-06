@@ -1,4 +1,7 @@
 const gift = document.getElementById("gift");
+const bgMusic = document.getElementById("bgMusic");
+const musicToggle = document.getElementById("musicToggle");
+
 const openButton = document.getElementById("openGift");
 const welcome = document.getElementById("welcome");
 const surprise = document.getElementById("surprise");
@@ -17,6 +20,7 @@ function createStars() {
         star.style.top = Math.random() * 100 + "%";
 
         const size = Math.random() * 3 + 1;
+
         star.style.width = size + "px";
         star.style.height = size + "px";
 
@@ -33,9 +37,9 @@ function createHearts() {
     const heart = document.createElement("span");
 
     heart.className = "heart";
-    heart.textContent = emojis[
-        Math.floor(Math.random() * emojis.length)
-    ];
+
+    heart.textContent =
+        emojis[Math.floor(Math.random() * emojis.length)];
 
     heart.style.left = Math.random() * 100 + "%";
     heart.style.fontSize = Math.random() * 20 + 15 + "px";
@@ -43,6 +47,25 @@ function createHearts() {
     heartsContainer.appendChild(heart);
 
     setTimeout(() => heart.remove(), 6500);
+}
+
+// UPDATE MUSIC BUTTON
+function updateMusicButton() {
+    musicToggle.textContent = bgMusic.paused
+        ? "🎵 PLAY MUSIC"
+        : "🎵 PAUSE MUSIC";
+}
+
+// START MUSIC
+function startMusic() {
+    bgMusic.play()
+        .then(() => {
+            updateMusicButton();
+        })
+        .catch(error => {
+            console.log("Music playback failed:", error);
+            updateMusicButton();
+        });
 }
 
 // OPEN THE GIFT
@@ -53,7 +76,9 @@ function openTheGift() {
 
     gift.classList.add("open");
 
-    // Show congratulations after the gift animation
+    // START THE BACKGROUND MUSIC
+    startMusic();
+
     setTimeout(() => {
 
         welcome.classList.add("hidden");
@@ -64,7 +89,7 @@ function openTheGift() {
             behavior: "smooth"
         });
 
-        // Launch celebration effects
+        // CELEBRATION HEARTS
         for (let i = 0; i < 30; i++) {
             setTimeout(createHearts, i * 120);
         }
@@ -72,14 +97,34 @@ function openTheGift() {
     }, 1300);
 }
 
-// REPLAY EXPERIENCE
-function replayExperience() {
+// PLAY OR PAUSE MUSIC
+function toggleMusic() {
 
+    if (bgMusic.paused) {
+        startMusic();
+    } else {
+        bgMusic.pause();
+        updateMusicButton();
+    }
+}
+
+// CLOSE GIFT AND RETURN TO WELCOME SCREEN
+function closeGift() {
+
+    // STOP MUSIC AND RESET TO BEGINNING
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+
+    updateMusicButton();
+
+    // HIDE THE SURPRISE
     surprise.classList.add("hidden");
     welcome.classList.remove("hidden");
 
+    // RESET GIFT BOX
     gift.classList.remove("open");
 
+    // RESET OPEN BUTTON
     openButton.disabled = false;
     openButton.innerHTML = 'OPEN YOUR GIFT <span>✦</span>';
 
@@ -89,12 +134,15 @@ function replayExperience() {
     });
 }
 
-// EVENT LISTENERS
+// BUTTON CONNECTIONS
 openButton.addEventListener("click", openTheGift);
-replay.addEventListener("click", replayExperience);
 
-// START THE WEBSITE
+musicToggle.addEventListener("click", toggleMusic);
+
+replay.addEventListener("click", closeGift);
+
+// START WEBSITE
 createStars();
 
-// Continuously create a few floating hearts
+// FLOATING HEARTS
 setInterval(createHearts, 1800);
